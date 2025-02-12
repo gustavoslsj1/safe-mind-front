@@ -1,0 +1,1 @@
+# safe-mind-front

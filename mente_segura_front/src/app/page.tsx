@@ -1,50 +1,18 @@
 "use client";
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/global/components/ui/alert-dialog";
-import { Button } from "@/global/components/ui/button";
-import Login from "./login/page";
-import { redirect } from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function Home() {
-  const [isDialogOpen, setIsDialogOpen] = useState(true);
-
-  function loginPage() {
-    redirect("/login");
-  }
-  function emergenciPage() {
-    redirect("emergenci");
-  }
-
   return (
-    <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>SEJA BEM-VINDO </AlertDialogTitle>
-          <AlertDialogDescription>
-            Caso seja algo urgente, escolha "Emergência". Caso contrário,
-            selecione a opção convencional.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel onClick={loginPage}>
-            convencional
-          </AlertDialogCancel>
-          <AlertDialogAction className="bg-red-900" onClick={emergenciPage}>
-            Emergência
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <div className=" gap-24  flex flex-col justify-center items-center  w-full h-[calc(100%-10%)]">
+      <h1 className=" text-white text-6xl font-serif  ">Mente Segura </h1>
+      <Button
+        asChild
+        className=" bg-slate-700  font-serif p-10 transition-all text-xl duration-400"
+      >
+        <Link href="/escolha">começar a usar</Link>
+      </Button>
+    </div>
   );
 }

@@ -41,7 +41,7 @@ export default function AboutUs() {
     );
   }
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8 font-inter">
+    <div className="min-h-screen bg-transparent py-12 px-4 sm:px-6 lg:px-8 font-inter">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-blue-800 text-center mb-8">
           Sobre o Mente Segura

@@ -1,47 +1,159 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
-export default function Login() {
-  const [inputMessage, setInputMessage] = useState("");
-  const [messages, setMessages] = useState<string[]>([]);
+import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setMessages([...messages, inputMessage]);
-    setInputMessage("");
-  };
+const formSchema = z.object({
+  email: z.string().email("Email inválido"),
+  password: z.string().min(1, "Senha é obrigatória"),
+  rememberMe: z.boolean().default(false),
+});
+
+export default function LoginPage() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      setIsLoading(true);
+      // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+      console.log(values);
+    } catch (error) {
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
-    <div className="flex flex-col py-14  h-[calc(100%-10%)] justify-between  items-center">
-      <div className="flex  items-start justify-star w-1/2">
-        <Card className="   bg-transparent border-0 shadow-none mb-4">
-          <CardContent className="  p-4">
-            {messages.map((message, index) => (
-              <div key={index} className=" mb-2 p-2 bg-blue-100 rounded-lg">
-                <p className="text-gray-800">{message}</p>
+    <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="space-y-3">
+          <CardTitle className="text-2xl font-bold text-center">
+            Bem-vindo de volta!
+          </CardTitle>
+          <CardDescription className="text-center">
+            Entre com suas credenciais para acessar sua conta
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          placeholder="Digite seu email"
+                          className="pl-9"
+                          {...field}
+                        />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Senha</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                        <Input
+                          type={showPassword ? "text" : "password"}
+                          placeholder="Digite sua senha"
+                          className="pl-9"
+                          {...field}
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          className="absolute right-0 top-0"
+                          onClick={() => setShowPassword(!showPassword)}
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </Button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex items-center justify-between">
+                <a href="#" className="text-sm text-primary hover:underline">
+                  Esqueceu a senha?
+                </a>
               </div>
-            ))}
-            {messages.length === 0 && (
-              <p className="text-gray-500 text-center">
-                Nenhuma mensagem ainda. Comece a conversa!
-              </p>
-            )}
-          </CardContent>
-        </Card>
-      </div>
-      <form onSubmit={handleSubmit} className=" w-1/2 flex gap-2">
-        <Input
-          type="text"
-          value={inputMessage}
-          onChange={(e) => setInputMessage(e.target.value)}
-          placeholder="Digite sua mensagem..."
-          className="flex-grow bg-blue-100 "
-        />
-        <Button type="submit">Enviar</Button>
-      </form>
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Entrando...
+                  </>
+                ) : (
+                  "Entrar"
+                )}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex justify-center">
+          <p className="text-sm text-muted-foreground">
+            Não tem uma conta?{" "}
+            <a href="cadastro" className="text-primary hover:underline">
+              Cadastre-se
+            </a>
+          </p>
+        </CardFooter>
+      </Card>
     </div>
   );
 }
